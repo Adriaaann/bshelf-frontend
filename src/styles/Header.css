@@ -1,0 +1,92 @@
+.headerContainer {
+    align-items: center;
+    background-color: var(--jet);
+    display: flex;
+    justify-content: center;
+    padding: 1rem 0;
+}
+
+.headerContent {
+    background-color: var(--jet);
+    display: flex;
+    justify-content: space-between;
+    min-width: 60rem;
+}
+
+.headerItems {
+    align-items: center;
+    display: flex;
+    gap: 1rem;
+}
+
+.headerItems hr {
+    height: 2rem;
+    width: .1rem;
+    background-color: var(--light-grey);
+    border: none;
+    border-radius: 1rem;
+}
+
+.login {
+    display: flex;
+    gap: 1rem;
+}
+
+.login a, .login button {
+    align-items: center;
+    background: none;
+    border: none;
+    color: var(--white-smoke);
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    font-size: 1rem;
+    font-weight: 500;
+    gap: .5rem;
+    text-decoration: none;
+}
+
+.login a:hover, .login button:hover {
+    color: var(--sunglow);
+}
+
+.logo img{
+    height: 2.5rem;
+}
+
+.searchBar {
+    display: flex;
+    gap: 1rem;
+}
+
+.searchBar input {
+    background-color: var(--eerie-black);
+    border: var(--light-grey) .1rem solid;
+    border-radius: 2rem;
+    color: var(--white-smoke);
+    font-size: .9rem;
+    height: 2rem;
+    padding: .5rem 1rem;
+    width: 12rem;
+}
+
+.searchBar input:focus {
+    outline: var(--sunglow) solid .1rem;
+}
+
+.searchBar button {
+    background: none;
+    border: none;
+    color: var(--white-smoke);
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.searchBar button:hover {
+    color: var(--sunglow);
+}
+
+.searchBtn {
+    align-items: center;
+    display: flex;
+}

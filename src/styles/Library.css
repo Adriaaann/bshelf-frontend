@@ -1,0 +1,92 @@
+.libraryHeader {
+   color: var(--white-smoke);
+   display: flex;
+   flex-direction: column;
+   margin: auto;
+   padding-top: 3rem;
+   width: 60rem;
+}
+
+.libraryButtons {
+   border-bottom: 0.1rem solid var(--sunglow);
+   display: flex;
+   flex-direction: row;
+   gap: 1rem;
+}
+
+.libraryButtons button {
+   border: none;
+   border-radius: 0.5rem 0.5rem 0 0;
+   background-color: var(--jet);
+   color: var(--white-smoke);
+   cursor: pointer;
+   font-size: 0.9rem;
+   font-weight: 600;
+   padding: 0.25rem 1rem;
+}
+
+.libraryButtons button:hover {
+   background-color: var(--sunglow);
+   color: var(--eerie-black);
+}
+
+.libraryButtons .selected {
+   background-color: var(--sunglow);
+   color: var(--eerie-black);
+}
+
+.libraryContainer {
+   display: flex;
+   flex-wrap: wrap;
+   gap: 0.5rem 1.2rem;
+   margin: auto;
+   padding-top: 3.199rem;
+   width: 60rem;
+}
+
+.libraryContainer p {
+   align-items: center;
+   border: 0.15rem solid var(--jet);
+   color: var(--white-smoke);
+   display: flex;
+   justify-content: center;
+   height: 13.5rem;
+   width: 60rem;
+}
+
+.libraryBookWrapper {
+   display: flex;
+   flex-direction: column;
+   gap: 0.5rem;
+}
+
+.libraryBookWrapper img {
+   border: 0.2rem solid var(--jet);
+   cursor: pointer;
+   height: 13.5rem;
+   width: 9rem;
+}
+
+.libraryBookWrapper:hover img {
+   border-color: var(--sunglow);
+}
+
+.libraryBookWrapper span {
+   background-color: var(--jet);
+   border-radius: 0.5rem;
+   color: var(--white-smoke);
+   visibility: hidden;
+   font-size: 0.8rem;
+   font-weight: 400;
+   height: 1.5rem;
+   padding: 0.15rem 0.75rem 0;
+   overflow: hidden;
+   text-align: center;
+   text-overflow: ellipsis;
+   white-space: nowrap;
+   width: 9rem;
+}
+
+.libraryBookWrapper:hover span {
+   visibility: visible;
+}

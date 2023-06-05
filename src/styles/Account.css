@@ -1,0 +1,61 @@
+.accountContainer {
+   margin: auto;
+   padding-top: 5rem;
+   width: 60rem;
+}
+
+.accountInfo {
+   color: var(--white-smoke);
+   display: flex;
+   flex-direction: column;
+   font-size: 1.25rem;
+   font-weight: 600;
+   gap: 1rem;
+}
+
+.accountInfo label {
+   display: flex;
+   flex-direction: column;
+   gap: 0.5rem;
+}
+
+.accountInfo input {
+   background-color: var(--jet);
+   border: none;
+   border-radius: 0.5rem;
+   color: var(--white-smoek);
+   font-size: 1rem;
+   padding: 1rem;
+}
+
+.accountForm button {
+   border: none;
+   border-radius: 0.5rem;
+   background-color: var(--sunglow);
+   color: var(--eerie-black);
+   cursor: pointer;
+   font-size: 1rem;
+   font-weight: 600;
+   margin-top: 1rem;
+   padding: 0.5rem 1rem;
+   width: 10rem;
+}
+
+.loginError {
+   align-items: center;
+   background-color: #fa817b;
+   border: 0.1rem solid #8d524c;
+   border-radius: 0.5rem;
+   color: black;
+   display: flex;
+   justify-content: center;
+   margin-top: 1rem;
+   width: 17rem;
+}
+
+.loginError p {
+   font-size: 1rem;
+   font-weight: 600;
+   padding: 0.5rem 1rem;
+   text-align: center;
+}
