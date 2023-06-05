@@ -17,32 +17,26 @@ function Search() {
 
          const { items } = await response.json();
 
-         const filteredBooks = items.filter((item) => {
+         const filteredBooks = items.filter((item: Book) => {
             const {
-               volumeInfo: { authors, categories, imageLinks, pageCount },
+               volumeInfo: { authors, categories, pageCount },
                searchInfo,
             } = item;
 
-            const filter =
-               (authors && categories && imageLinks && searchInfo) !==
-                  undefined && pageCount > 10;
-
-            if (filter) {
-               return item;
-            }
-            return undefined;
+            return (authors && categories && searchInfo) !== undefined &&
+               pageCount > 10
+               ? item
+               : undefined;
          });
-
          setBooks(filteredBooks);
       };
-
       fetchBooks();
-   }, [query]);
+   }, [query, API_KEY]);
 
    return (
       <>
          <Header />
-         <div className="resultsContainer">
+         <div className="container">
             <div className="resultsName">
                <p>
                   Showing results for{' '}
@@ -50,7 +44,7 @@ function Search() {
                </p>
             </div>
             <div className="resultsWrapper">
-               {books.map((book) => {
+               {books.map((book: Book) => {
                   const {
                      id,
                      volumeInfo: { title, authors },
@@ -78,6 +72,7 @@ function Search() {
                               {authors.join(', ')}
                            </p>
                            <p
+                              // eslint-disable-next-line react/no-danger
                               dangerouslySetInnerHTML={{
                                  __html: description,
                               }}
@@ -91,6 +86,20 @@ function Search() {
          </div>
       </>
    );
+}
+
+interface Book {
+   id: string;
+   selfLink: string;
+   volumeInfo: {
+      title: string;
+      authors: string[];
+      categories: string[];
+      pageCount: number;
+   };
+   searchInfo: {
+      textSnippet: string;
+   };
 }
 
 export default Search;

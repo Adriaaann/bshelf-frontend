@@ -1,6 +1,5 @@
 :root {
    --white-smoke: #f5f5f5ff;
-   --light-grey: #5d5d5b;
    --jet: #343432ff;
    --eerie-black: #20221cff;
    --sunglow: #ffcb1fff;
@@ -9,12 +8,20 @@
 }
 
 * {
+   box-sizing: border-box;
+   color: var(--white-smoke);
+   font-family: 'Open Sans', sans-serif;
    margin: 0;
    padding: 0;
-   box-sizing: border-box;
-   font-family: 'Open Sans', sans-serif;
 }
 
 body {
    background-color: var(--eerie-black);
+}
+
+.container {
+   display: flex;
+   flex-direction: column;
+   margin: auto;
+   width: 60rem;
 }

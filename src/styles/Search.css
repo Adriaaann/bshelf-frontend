@@ -1,72 +1,60 @@
-.resultsContainer {
-    display: flex;
-    flex-direction: column;
-    margin: auto;
-    width: 60rem;
-}
-
 .resultsName {
-    font-size: 1.25rem;
-    padding: 2rem 0 0;
-}
-
-.resultsName p {
-    color: var(--white-smoke);
+   color: var(--white-smoke);
+   font-size: 1.25rem;
+   padding: 2rem 0 0;
 }
 
 .resultsName p span {
-    color: var(--sunglow);
+   color: var(--sunglow);
 }
 
 .resultsWrapper {
-    display: flex;
-    flex-direction: column;
+   display: flex;
+   flex-direction: column;
 }
 
-.resultsBook {  
-    border-bottom: 1px solid var(--light-grey);
-    padding: 2rem 0;
-    display: flex;
-    flex-direction: row;
-    gap: 2rem;
-    text-decoration: none;
+.resultsBook {
+   border-bottom: 0.15rem solid var(--jet);
+   padding: 2rem 0;
+   display: flex;
+   flex-direction: row;
+   gap: 2rem;
 }
 
 .resultsBook a img {
-    height: 15rem;
-    border: .15rem solid var(--light-grey);
+   border: 0.15rem solid var(--jet);
+   height: 15rem;
+   width: 10rem;
 }
 
 .resultsBook:hover a img {
-    height: 15rem;
-    border: .15rem solid var(--sunglow);
+   border-color: var(--sunglow);
+   height: 15rem;
 }
 
 .resultsBook:hover .resultsTitle {
-    color: var(--sunglow);
+   color: var(--sunglow);
 }
 
 .resultsInfo {
-    color: var(--white-smoke);
-    display: flex;
-    flex-direction: column;
-    gap: .5rem;
+   display: flex;
+   flex-direction: column;
+   gap: 0.5rem;
 }
 
 .resultsInfo a {
-    text-decoration: none;
+   text-decoration: none;
 }
 
 .resultsTitle {
-    color: var(--white-smoke);
-    font-size: 1.25rem;
+   font-size: 1.25rem;
 }
 
 .resultsAuthors {
-    font-style: italic;
+   font-style: italic;
 }
 
 .resultsDescription {
-    display: flex;
-    padding-top: 1.5rem;
+   display: flex;
+   padding-top: 1.5rem;
 }
