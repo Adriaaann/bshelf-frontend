@@ -7,9 +7,9 @@ import '../styles/Header.css';
 function Header() {
    const navigate = useNavigate();
 
-   const user = JSON.parse(localStorage.getItem('user'));
-
    const [searchValue, setSearchValue] = useState('');
+
+   const user = JSON.parse(localStorage.getItem('user') || '{}');
 
    const handleClick = () => {
       if (searchValue !== '') {
@@ -19,8 +19,12 @@ function Header() {
       }
    };
 
-   const handleChange = ({ target }: { target: any }) => {
-      setSearchValue(target.value);
+   const handleChange = ({
+      target: { value },
+   }: {
+      target: { value: string };
+   }) => {
+      setSearchValue(value);
    };
 
    const handleSingOut = () => {
@@ -37,7 +41,7 @@ function Header() {
                </a>
             </div>
             <div className="headerItems">
-               {user ? (
+               {Object.keys(user).length !== 0 ? (
                   <div className="login">
                      <a href="/account" className="account">
                         <Icon path={mdiAccountCircle} size={1.5} />
