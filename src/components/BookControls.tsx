@@ -63,22 +63,31 @@ function BookControls() {
       getBook();
    }, [id, bookId]);
 
-   const postBook = async (addBook: Book) => {
-      setApiBook(addBook);
+   useEffect(() => {
+      const verifyBook = async () => {
+         if (
+            apiBook.title !== '' &&
+            !apiBook.favorite &&
+            !apiBook.planning &&
+            !apiBook.read
+         ) {
+            try {
+               await axios.delete(`books/${id}/${bookId}`);
+            } catch (err) {
+               console.log(err);
+            }
+         }
+      };
+      verifyBook();
+   }, [bookId, id, apiBook]);
 
+   const postBook = async (addBook: Book) => {
       try {
          await axios.post(`books/${id}`, addBook);
       } catch (err) {
          console.log(err);
       }
-
-      if (!apiBook.read && !apiBook.favorite && !apiBook.planning) {
-         try {
-            await axios.delete(`books/${id}/${bookId}`);
-         } catch (err) {
-            console.log(err);
-         }
-      }
+      setApiBook(addBook);
    };
 
    const clearRating = () => {
