@@ -12,9 +12,10 @@ import {
 } from '@mdi/js';
 import Icon from '@mdi/react';
 import axios from '../api/axios';
+import '../styles/BookControls.css';
 
 function BookControls() {
-   const [book, setBook] = useState({});
+   const [book, setBook] = useState({ id: '', volumeInfo: { title: '' } });
    const [rating, setRating] = useState(0);
    const [apiBook, setApiBook] = useState({
       id: '',
@@ -59,53 +60,19 @@ function BookControls() {
             }
          }
       };
-
       getBook();
    }, [id, bookId]);
 
-   const handleClick = async ({ currentTarget: { name, value } }) => {
-      if (!id) {
-         navigate('/login');
-      }
-
-      const addBook = {
-         id: bookId,
-         title: book.volumeInfo.title,
-         cover: `https://books.google.com/books/content/images/frontcover/${bookId}?fife=w480-h690`,
-         rating: apiBook.rating,
-         read: apiBook.read,
-         favorite: apiBook.favorite,
-         planning: apiBook.planning,
-      };
-
-      if (name === 'readBtn') {
-         addBook.read = !addBook.read;
-         addBook.rating = 0;
-         setRating(0);
-      }
-
-      if (name === 'favBtn') {
-         addBook.favorite = !addBook.favorite;
-      }
-
-      if (name === 'planBtn') {
-         addBook.planning = !addBook.planning;
-      }
-
-      if (name === 'ratingBtn') {
-         addBook.rating = value;
-         addBook.read = true;
-         setRating(value);
-      }
+   const postBook = async (addBook: Book) => {
+      setApiBook(addBook);
 
       try {
          await axios.post(`books/${id}`, addBook);
-         setApiBook(addBook);
       } catch (err) {
          console.log(err);
       }
 
-      if (!addBook.read && !addBook.favorite && !addBook.planning) {
+      if (!apiBook.read && !apiBook.favorite && !apiBook.planning) {
          try {
             await axios.delete(`books/${id}/${bookId}`);
          } catch (err) {
@@ -114,74 +81,111 @@ function BookControls() {
       }
    };
 
+   const clearRating = () => {
+      setRating(0);
+
+      return postBook({
+         ...apiBook,
+         id: book.id,
+         title: book.volumeInfo.title,
+         cover: `https://books.google.com/books/content/images/frontcover/${book.id}?fife=w480-h690`,
+         rating: 0,
+      });
+   };
+
+   const handleRating = ({
+      currentTarget: { value },
+   }: {
+      currentTarget: { value: string };
+   }) => {
+      if (!id) {
+         return navigate('/login');
+      }
+
+      setRating(Number(value));
+
+      return postBook({
+         ...apiBook,
+         id: book.id,
+         title: book.volumeInfo.title,
+         cover: `https://books.google.com/books/content/images/frontcover/${book.id}?fife=w480-h690`,
+         rating: Number(value),
+         read: true,
+      });
+   };
+
+   const handleClick = async ({
+      currentTarget: { name },
+   }: {
+      currentTarget: { name: string };
+   }) => {
+      if (!id) {
+         return navigate('/login');
+      }
+
+      return postBook({
+         ...apiBook,
+         id: book.id,
+         title: book.volumeInfo.title,
+         cover: `https://books.google.com/books/content/images/frontcover/${book.id}?fife=w480-h690`,
+         [name]: !apiBook[name as keyof Book],
+      });
+   };
+
+   const buttons = [
+      {
+         name: 'read',
+         iconChecked: mdiBookCheck,
+         icon: mdiBookCheckOutline,
+         color: 'var(--sunglow)',
+      },
+      {
+         name: 'favorite',
+         iconChecked: mdiHeart,
+         icon: mdiHeartOutline,
+         color: 'var(--red)',
+      },
+      {
+         name: 'planning',
+         iconChecked: mdiClockMinus,
+         icon: mdiClockPlusOutline,
+         color: 'var(--blue)',
+      },
+   ];
+
    return (
       <div className="bookControls">
          <div className="bookButtons">
-            <button
-               type="button"
-               name="readBtn"
-               onClick={(e) => handleClick(e)}
-            >
-               {apiBook.read ? (
-                  <>
-                     <Icon
-                        path={mdiBookCheck}
-                        size={2}
-                        style={{ color: 'var(--sunglow)' }}
-                     />
-                     <span className="checked">Read</span>
-                  </>
-               ) : (
-                  <>
-                     <Icon path={mdiBookCheckOutline} size={2} />
-                     <span>Read</span>
-                  </>
-               )}
-            </button>
-            <button type="button" name="favBtn" onClick={(e) => handleClick(e)}>
-               {apiBook.favorite ? (
-                  <>
-                     <Icon
-                        path={mdiHeart}
-                        size={2}
-                        style={{ color: 'var(--red)' }}
-                     />
-                     <span className="checked">Favorite</span>
-                  </>
-               ) : (
-                  <>
-                     <Icon path={mdiHeartOutline} size={2} />
-                     <span>Favorite</span>
-                  </>
-               )}
-            </button>
-            <button
-               type="button"
-               name="planBtn"
-               onClick={(e) => handleClick(e)}
-            >
-               {apiBook.planning ? (
-                  <>
-                     <Icon
-                        path={mdiClockMinus}
-                        size={2}
-                        style={{ color: 'var(--blue)' }}
-                     />
-                     <span className="checked">Planning</span>
-                  </>
-               ) : (
-                  <>
-                     <Icon path={mdiClockPlusOutline} size={2} />
-                     <span>Planning</span>
-                  </>
-               )}
-            </button>
+            {buttons.map((btn) => (
+               <button
+                  name={btn.name}
+                  key={btn.name}
+                  type="button"
+                  onClick={(e) => handleClick(e)}
+               >
+                  {apiBook[btn.name as keyof Book] ? (
+                     <>
+                        <Icon
+                           color={btn.color}
+                           path={btn.iconChecked}
+                           size={2}
+                        />
+                        <span>{btn.name}</span>
+                     </>
+                  ) : (
+                     <>
+                        <Icon path={btn.icon} size={2} />
+                        <span>{btn.name}</span>
+                     </>
+                  )}
+               </button>
+            ))}
          </div>
          <hr />
          <div className="bookRating">
             <div className="bookRatingButton">
                {rating > 0 && (
-                  <button type="button" onClick={() => setRating(0)}>
+                  <button type="button" onClick={clearRating}>
                      <Icon path={mdiClose} size={0.5} />
                   </button>
                )}
@@ -195,12 +199,16 @@ function BookControls() {
                            name="ratingBtn"
                            id={`ratingBtn${i}`}
                            value={ratingValue}
-                           onClick={(e) => handleClick(e)}
+                           onClick={(e) => handleRating(e)}
                         />
                         {ratingValue <= rating ? (
-                           <Icon className="selected" path={mdiStar} size={2} />
+                           <Icon
+                              color="var(--sunglow)"
+                              path={mdiStar}
+                              size={1.8}
+                           />
                         ) : (
-                           <Icon path={mdiStar} size={2} />
+                           <Icon path={mdiStar} size={1.8} />
                         )}
                      </label>
                   );
@@ -210,6 +218,16 @@ function BookControls() {
          </div>
       </div>
    );
+}
+
+interface Book {
+   id: string;
+   title: string;
+   cover: string;
+   rating: number;
+   read: boolean;
+   favorite: boolean;
+   planning: boolean;
 }
 
 export default BookControls;
