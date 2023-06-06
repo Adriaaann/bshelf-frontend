@@ -79,14 +79,18 @@
    display: flex;
    font-size: 1rem;
    font-weight: 300;
-   max-height: 27rem;
+   max-height: 26.6rem;
    overflow: hidden;
    text-align: justify;
 }
 
+.bookDescription.show {
+   max-height: none;
+   overflow: none;
+}
+
 .bookFooter {
    background-color: var(--jet);
-   /* border: .15rem solid var(--light-grey); */
    border-radius: 0.5rem;
    display: flex;
    flex-direction: row;
@@ -120,8 +124,13 @@
    height: 4rem;
    justify-content: end;
    position: absolute;
-   top: 36.9rem;
+   top: 36.5rem;
    width: 38.323rem;
+}
+
+.descriptionBorder.show {
+   height: 1rem;
+   position: initial;
 }
 
 .descriptionBorder button {

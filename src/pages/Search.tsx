@@ -8,6 +8,7 @@ function Search() {
    const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
 
    const [books, setBooks] = useState([]);
+   const [isLoading, setIsLoading] = useState(true);
 
    useEffect(() => {
       const fetchBooks = async () => {
@@ -29,6 +30,7 @@ function Search() {
                : undefined;
          });
          setBooks(filteredBooks);
+         setIsLoading(false);
       };
       fetchBooks();
    }, [query, API_KEY]);
@@ -36,54 +38,56 @@ function Search() {
    return (
       <>
          <Header />
-         <div className="container">
-            <div className="resultsName">
-               <p>
-                  Showing results for{' '}
-                  <span>{`"${query?.replaceAll('+', ' ')}"`}</span>
-               </p>
-            </div>
-            <div className="resultsWrapper">
-               {books.map((book: Book) => {
-                  const {
-                     id,
-                     volumeInfo: { title, authors },
-                     searchInfo: { textSnippet },
-                  } = book;
+         {!isLoading && (
+            <div className="container">
+               <div className="resultsName">
+                  <p>
+                     Showing results for{' '}
+                     <span>{`"${query?.replaceAll('+', ' ')}"`}</span>
+                  </p>
+               </div>
+               <div className="resultsWrapper">
+                  {books.map((book: Book) => {
+                     const {
+                        id,
+                        volumeInfo: { title, authors },
+                        searchInfo: { textSnippet },
+                     } = book;
 
-                  const description = textSnippet.replace(
-                     /(?!<br>)(<([^>]+)>)/gi,
-                     ''
-                  );
+                     const description = textSnippet.replace(
+                        /(?!<br>)(<([^>]+)>)/gi,
+                        ''
+                     );
 
-                  return (
-                     <div className="resultsBook" key={id}>
-                        <a href={`/book/${id}`}>
-                           <img
-                              src={`https://books.google.com/books/content/images/frontcover/${id}?fife=w480-h690`}
-                              alt={title}
-                           />
-                        </a>
-                        <div className="resultsInfo">
+                     return (
+                        <div className="resultsBook" key={id}>
                            <a href={`/book/${id}`}>
-                              <p className="resultsTitle">{title}</p>
+                              <img
+                                 src={`https://books.google.com/books/content/images/frontcover/${id}?fife=w480-h690`}
+                                 alt={title}
+                              />
                            </a>
-                           <p className="resultsAuthors">
-                              {authors.join(', ')}
-                           </p>
-                           <p
-                              // eslint-disable-next-line react/no-danger
-                              dangerouslySetInnerHTML={{
-                                 __html: description,
-                              }}
-                              className="resultsDescription"
-                           />
+                           <div className="resultsInfo">
+                              <a href={`/book/${id}`}>
+                                 <p className="resultsTitle">{title}</p>
+                              </a>
+                              <p className="resultsAuthors">
+                                 {authors.join(', ')}
+                              </p>
+                              <p
+                                 // eslint-disable-next-line react/no-danger
+                                 dangerouslySetInnerHTML={{
+                                    __html: description,
+                                 }}
+                                 className="resultsDescription"
+                              />
+                           </div>
                         </div>
-                     </div>
-                  );
-               })}
+                     );
+                  })}
+               </div>
             </div>
-         </div>
+         )}
       </>
    );
 }

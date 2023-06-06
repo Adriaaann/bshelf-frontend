@@ -193,11 +193,14 @@ function BookControls() {
                   const ratingValue = i + 1;
 
                   return (
-                     <label key={star} htmlFor={`ratingBtn${i}`}>
+                     <label
+                        key={`${star}${ratingValue}`}
+                        htmlFor={`ratingBtn${ratingValue}`}
+                     >
                         <input
                            type="radio"
                            name="ratingBtn"
-                           id={`ratingBtn${i}`}
+                           id={`ratingBtn${ratingValue}`}
                            value={ratingValue}
                            onClick={(e) => handleRating(e)}
                         />

@@ -16,7 +16,7 @@ import '../styles/BookPage.css';
 
 function BookPage() {
    const [isLoading, setIsLoading] = useState(true);
-   const [isCollapsed, setIsCollaped] = useState(true);
+   const [isCollapsed, setIsCollapsed] = useState(true);
    const [shouldCollapse, setShouldCollapse] = useState(false);
    const [book, setBook] = useState({
       volumeInfo: {
@@ -44,49 +44,21 @@ function BookPage() {
          const data = await response.json();
 
          setBook(data);
+
+         const bookDescription = document.querySelector(
+            '.bookDescription'
+         ) as HTMLElement;
+
+         if (bookDescription) {
+            if (bookDescription.clientHeight >= 425) {
+               setShouldCollapse(true);
+            }
+         }
+
          setIsLoading(false);
       };
       fetchBook();
-
-      const bookDescription = document.querySelector(
-         '.bookDescription'
-      ) as HTMLElement;
-
-      if (bookDescription) {
-         if (bookDescription.clientHeight >= 432) {
-            setShouldCollapse(true);
-         }
-      }
    }, [id, bookId]);
-
-   const handleDescription = () => {
-      const descriptionBorder = document.querySelector(
-         '.descriptionBorder'
-      ) as HTMLElement;
-      const bookDescription = document.querySelector(
-         '.bookDescription'
-      ) as HTMLElement;
-
-      const changeStyle = (
-         maxHeight: string,
-         overflow: string,
-         height: string,
-         position: string
-      ) => {
-         bookDescription.style.maxHeight = maxHeight;
-         bookDescription.style.overflow = overflow;
-         descriptionBorder.style.height = height;
-         descriptionBorder.style.position = position;
-      };
-
-      if (isCollapsed) {
-         changeStyle('none', 'none', '1rem', 'initial');
-      } else {
-         changeStyle('27rem', 'hidden', '4rem', 'absolute');
-      }
-
-      setIsCollaped(!isCollapsed);
-   };
 
    if (Object.keys(book).includes('error')) {
       return <NotFound />;
@@ -156,17 +128,33 @@ function BookPage() {
                      <div
                         // eslint-disable-next-line react/no-danger
                         dangerouslySetInnerHTML={{ __html: bookDescription }}
-                        className="bookDescription"
+                        className={
+                           isCollapsed
+                              ? 'bookDescription'
+                              : 'bookDescription show'
+                        }
                      />
-                     {!shouldCollapse && (
-                        <div className="descriptionBorder">
+                     {shouldCollapse && (
+                        <div
+                           className={
+                              isCollapsed
+                                 ? 'descriptionBorder'
+                                 : 'descriptionBorder show'
+                           }
+                        >
                            {isCollapsed ? (
-                              <button type="button" onClick={handleDescription}>
+                              <button
+                                 type="button"
+                                 onClick={() => setIsCollapsed(false)}
+                              >
                                  Show more{' '}
                                  <Icon path={mdiChevronDoubleDown} size={1} />
                               </button>
                            ) : (
-                              <button type="button" onClick={handleDescription}>
+                              <button
+                                 type="button"
+                                 onClick={() => setIsCollapsed(true)}
+                              >
                                  Show less{' '}
                                  <Icon path={mdiChevronDoubleUp} size={1} />
                               </button>
