@@ -1,4 +1,5 @@
-import { BaseSyntheticEvent, useState } from 'react';
+import { BaseSyntheticEvent, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import axios from '../api/axios';
 import '../styles/Account.css';
@@ -12,9 +13,17 @@ function Account() {
       password: '',
    });
 
+   const navigate = useNavigate();
+
    const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
 
    const { _id: userId } = currentUser;
+
+   useEffect(() => {
+      if (!userId) {
+         navigate('/login');
+      }
+   }, [userId, navigate]);
 
    const handleChange = ({
       target: { name, value },
