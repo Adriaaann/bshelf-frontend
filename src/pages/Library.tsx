@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import axios from '../api/axios';
 import '../styles/Library.css';
@@ -8,8 +9,16 @@ function Library() {
    const [filteredBooks, setFilteredBooks] = useState([]);
    const [btnFilter, setBtnFilter] = useState('read');
 
+   const navigate = useNavigate();
+
+   const user = JSON.parse(localStorage.getItem('user') || '{}');
+
+   const { _id: userId } = user;
+
    useEffect(() => {
-      const { _id: userId } = JSON.parse(localStorage.getItem('user'));
+      if (!userId) {
+         return navigate('/login');
+      }
 
       const getUser = async () => {
          try {
@@ -23,60 +32,42 @@ function Library() {
 
       getUser();
 
-      if (btnFilter === 'read') {
-         setFilteredBooks(books.filter((book) => book.read === true));
-      }
-      if (btnFilter === 'favorite') {
-         setFilteredBooks(books.filter((book) => book.favorite === true));
-      }
-      if (btnFilter === 'planning') {
-         setFilteredBooks(books.filter((book) => book.planning === true));
-      }
-   }, [books, btnFilter]);
+      return setFilteredBooks(books.filter((book) => book[btnFilter] === true));
+   }, [books, userId, btnFilter, navigate]);
 
-   const handleClick = (e) => {
-      [...e.target.parentNode.childNodes].map((node) => {
-         document.getElementById(`${node.name}`).classList.remove('selected');
-      });
-      document.getElementById(`${e.target.name}`).classList.add('selected');
-      setBtnFilter(e.target.name);
-   };
+   const filters = [
+      {
+         name: 'read',
+      },
+      {
+         name: 'favorite',
+      },
+      {
+         name: 'planning',
+      },
+   ];
 
    return (
       <div>
          <Header />
          <div className="libraryHeader">
             <div className="libraryButtons">
-               <button
-                  name="read"
-                  id="read"
-                  type="button"
-                  className="selected"
-                  onClick={(e) => handleClick(e)}
-               >
-                  Read
-               </button>
-               <button
-                  name="favorite"
-                  id="favorite"
-                  type="button"
-                  onClick={(e) => handleClick(e)}
-               >
-                  Favorite
-               </button>
-               <button
-                  name="planning"
-                  id="planning"
-                  type="button"
-                  onClick={(e) => handleClick(e)}
-               >
-                  Planning
-               </button>
+               {filters.map((btn) => (
+                  <button
+                     name={btn.name}
+                     key={btn.name}
+                     type="button"
+                     className={btnFilter === btn.name ? 'selected' : ''}
+                     onClick={() => setBtnFilter(btn.name)}
+                  >
+                     {btn.name}
+                  </button>
+               ))}
             </div>
          </div>
          <div className="libraryContainer">
             {filteredBooks.length > 0 ? (
-               filteredBooks.map((book) => (
+               filteredBooks.map((book: Book) => (
                   <a
                      href={`/book/${book.id}`}
                      key={book.id}
@@ -92,6 +83,12 @@ function Library() {
          </div>
       </div>
    );
+}
+
+interface Book {
+   id: string;
+   title: string;
+   cover: string;
 }
 
 export default Library;
