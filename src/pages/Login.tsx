@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { BaseSyntheticEvent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Login.css';
 import axios from '../api/axios';
@@ -24,18 +24,22 @@ function Login() {
    }, [url, setLogin]);
 
    const handleClick = () => {
+      setError(false);
       setLogin(!isLogin);
    };
 
-   const handleChange = ({ target }: { target: any }) => {
-      const { name, value } = target;
+   const handleChange = ({
+      target: { name, value },
+   }: {
+      target: { name: string; value: string };
+   }) => {
       setUser((prevUser) => ({
          ...prevUser,
          [name]: value,
       }));
    };
 
-   const handleSubmit = async (e: any) => {
+   const handleSubmit = async (e: BaseSyntheticEvent) => {
       e.preventDefault();
 
       if (e.target.name === 'createAccount') {

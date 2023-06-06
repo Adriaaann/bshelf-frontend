@@ -1,119 +1,115 @@
 .loginContainer {
-    background-color: var(--jet);
-    border-radius: 1rem;
-    box-shadow: 0 0 2rem .1rem rgba(0, 0, 0, 0.5);
-    height: 40rem;
-    left: 50%;
-    margin: 0;
-    position: absolute;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: 30rem;
+   height: 40rem;
+   left: 50%;
+   margin: 0;
+   position: absolute;
+   top: 50%;
+   transform: translate(-50%, -50%);
+   width: 30rem;
 }
 
 .loginForm {
-    align-items: center;
-    display: flex;
-    flex-direction: column;
-    gap: 2.5rem;
-    height: 100%;
-    justify-content: center;
-    width: 100%;
+   align-items: center;
+   display: flex;
+   flex-direction: column;
+   gap: 2rem;
+   height: 100%;
+   justify-content: center;
 }
 
 .loginForm h1 {
-    color: var(--sunglow);
-    font-size: 2.5rem;
-    position: relative;
-    text-align: center;
+   color: var(--sunglow);
+   font-size: 2.5rem;
+   position: relative;
+   text-align: center;
 }
 
 .loginForm form {
-    align-items: center;
-    display: flex;
-    flex-direction: column;
-    gap: 2.5rem;
-    justify-content: center;
+   align-items: center;
+   display: flex;
+   flex-direction: column;
+   gap: 2.5rem;
+   justify-content: center;
 }
 
 .loginForm input {
-    background-color: var(--white-smoke);
-    border: .1rem solid black;
-    border-radius: .5rem;
-    font-size: 1rem;
-    font-weight: 500;
-    height: 2.5rem;
-    padding: 1rem;
-    width: 17rem;
+   background-color: var(--jet);
+   border: 0.15rem solid var(--eerie-black);
+   border-radius: 0.5rem;
+   box-shadow: 0 0 0.5rem 0.15rem #3434325b;
+   font-size: 1rem;
+   font-weight: 500;
+   height: 2.5rem;
+   padding: 1rem;
+   width: 17.5rem;
+}
+
+.loginForm input::placeholder {
+   color: var(--white-smoke);
 }
 
 .loginBtn {
-    background-color: var(--sunglow);
-    border: .1rem solid black;
-    border-radius: .5rem;
-    color: black;
-    cursor: pointer;
-    font-size: 1rem;
-    font-weight: 600;
-    height: 2.5rem;
-    padding: .5rem;
-    width: 17rem;
+   background-color: var(--sunglow);
+   border: none;
+   border-radius: 0.5rem;
+   box-shadow: 0 0 0.5rem 0.15rem #ffcb1f5b;
+   color: black;
+   cursor: pointer;
+   font-size: 1rem;
+   font-weight: 600;
+   height: 2.5rem;
+   padding: 0.5rem;
+   width: 17.5rem;
 }
 
 .loginFooter {
-    display: flex;
-    flex-direction: row;
-    gap: .5rem;
+   display: flex;
+   flex-direction: row;
+   gap: 0.5rem;
 }
 
 .loginFooter p {
-    color: var(--white-smoke);
-    font-size: 1rem;
+   font-size: 1rem;
 }
 
 .loginFooter button {
-    background: none;
-    border: 0;
-    color: var(--sunglow);
-    cursor: pointer;
-    font-size: 1rem;
+   background: none;
+   border: none;
+   color: var(--sunglow);
+   cursor: pointer;
+   font-size: 1rem;
 }
 
 .loginFooter button:hover {
-    text-decoration: solid underline .1rem;
+   text-decoration: solid underline 0.1rem;
 }
 
 .loginError {
-    align-items: center;
-    background-color: #FA817B;
-    border: .1rem solid #8D524C;
-    border-radius: .5rem;
-    color: black;
-    display: flex;
-    justify-content: center;
-    width: 17rem;
+   align-items: center;
+   background-color: var(--red);
+   border: none;
+   border-radius: 0.5rem;
+   box-shadow: 0 0 0.5rem 0.15rem #ec5b5b5b;
+   display: flex;
+   justify-content: center;
+   width: 17rem;
 }
 
 .loginError p {
-    font-size: 1rem;
-    font-weight: 600;
-    padding: .5rem 1rem;
-    text-align: center;
+   color: black;
+   font-weight: 500;
+   padding: 0.5rem 1rem;
+   text-align: center;
 }
 
 @media only screen and (max-width: 600px) {
-    * {
-        background-color: var(--jet);
-    }
-
-    .loginContainer {
-        box-shadow: none;
-        height: 100%;
-        left: 50%;
-        margin: 0;
-        position: absolute;
-        top: 50%;
-        transform: translate(-50%, -50%);
-        width: 100%;
-    }
+   .loginContainer {
+      height: 100%;
+      left: 50%;
+      margin: 0;
+      position: absolute;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%;
+   }
 }
