@@ -5,12 +5,13 @@
 }
 
 .accountInfo {
+   align-items: center;
    color: var(--white-smoke);
    display: flex;
    flex-direction: column;
    font-size: 1.25rem;
    font-weight: 600;
-   gap: 1rem;
+   gap: 1.5rem;
 }
 
 .accountInfo label {
@@ -26,36 +27,49 @@
    color: var(--white-smoek);
    font-size: 1rem;
    padding: 1rem;
+   width: 25rem;
 }
 
 .accountForm button {
+   background-color: var(--sunglow);
    border: none;
    border-radius: 0.5rem;
-   background-color: var(--sunglow);
-   color: var(--eerie-black);
+   box-shadow: 0 0 0.5rem 0.15rem #ffcb1f5b;
+   color: black;
    cursor: pointer;
    font-size: 1rem;
    font-weight: 600;
    margin-top: 1rem;
    padding: 0.5rem 1rem;
-   width: 10rem;
+   width: 25rem;
 }
 
-/* .loginError {
+.errorMsg,
+.successMsg {
    align-items: center;
-   background-color: #fa817b;
-   border: 0.1rem solid #8d524c;
+   border: none;
    border-radius: 0.5rem;
-   color: black;
    display: flex;
    justify-content: center;
    margin-top: 1rem;
-   width: 17rem;
+   width: 25rem;
 }
 
-.loginError p {
-   font-size: 1rem;
+.errorMsg {
+   background-color: var(--red);
+   box-shadow: 0 0 0.5rem 0.15rem #ec5b5b5b;
+}
+
+.successMsg {
+   background-color: var(--green);
+   box-shadow: 0 0 0.5rem 0.15rem #6eec745b;
+}
+
+.errorMsg p,
+.successMsg p {
+   color: black;
    font-weight: 600;
+   font-size: 1rem;
    padding: 0.5rem 1rem;
    text-align: center;
-} */
+}

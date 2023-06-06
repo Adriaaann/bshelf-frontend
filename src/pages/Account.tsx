@@ -1,30 +1,33 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { BaseSyntheticEvent, useState } from 'react';
 import Header from '../components/Header';
 import axios from '../api/axios';
 import '../styles/Account.css';
 
 function Account() {
-   const navigate = useNavigate();
-   const [error, setError] = useState(false);
    const [errorMsg, setErrorMsg] = useState('');
+   const [successMsg, setSuccessMsg] = useState('');
    const [user, setUser] = useState({
       username: '',
       email: '',
       password: '',
    });
 
-   const { _id: userId } = JSON.parse(localStorage.getItem('user'));
+   const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
 
-   const handleChange = ({ target }: { target: any }) => {
-      const { name, value } = target;
+   const { _id: userId } = currentUser;
+
+   const handleChange = ({
+      target: { name, value },
+   }: {
+      target: { name: string; value: string };
+   }) => {
       setUser((prevUser) => ({
          ...prevUser,
          [name]: value,
       }));
    };
 
-   const handleSubmit = async (e: any) => {
+   const handleSubmit = async (e: BaseSyntheticEvent) => {
       e.preventDefault();
 
       try {
@@ -33,14 +36,21 @@ function Account() {
          if (!Object.keys(response.data).includes('error')) {
             localStorage.removeItem('user');
             localStorage.setItem('user', JSON.stringify(response.data));
-            navigate('/');
-         }
 
-         setError(true);
+            setErrorMsg('');
+            setSuccessMsg('Successfully changed');
+            return setUser({
+               username: '',
+               email: '',
+               password: '',
+            });
+         }
+         setSuccessMsg('');
          setErrorMsg(response.data.error);
       } catch (err) {
          console.log(err);
       }
+      return null;
    };
 
    return (
@@ -54,6 +64,7 @@ function Account() {
                      <input
                         type="text"
                         name="username"
+                        value={user.username}
                         autoComplete="off"
                         onChange={handleChange}
                      />
@@ -63,6 +74,7 @@ function Account() {
                      <input
                         type="email"
                         name="email"
+                        value={user.email}
                         autoComplete="off"
                         onChange={handleChange}
                      />
@@ -73,12 +85,18 @@ function Account() {
                         type="password"
                         name="password"
                         minLength={6}
+                        value={user.password}
                         onChange={handleChange}
                      />
                   </label>
-                  {error && (
-                     <div className="loginError">
+                  {errorMsg !== '' && (
+                     <div className="errorMsg">
                         <p>{errorMsg}</p>
+                     </div>
+                  )}
+                  {successMsg !== '' && (
+                     <div className="successMsg">
+                        <p>{successMsg}</p>
                      </div>
                   )}
                   <button type="submit">Save</button>
