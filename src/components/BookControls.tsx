@@ -16,6 +16,7 @@ import '../styles/BookControls.css';
 
 function BookControls() {
    const [book, setBook] = useState({ id: '', volumeInfo: { title: '' } });
+   const [isLoading, setIsLoading] = useState(true);
    const [rating, setRating] = useState(0);
    const [apiBook, setApiBook] = useState({
       id: '',
@@ -43,6 +44,7 @@ function BookControls() {
          const data = await response.json();
 
          setBook(data);
+         setIsLoading(false);
       };
       fetchBook();
 
@@ -164,70 +166,74 @@ function BookControls() {
 
    return (
       <div className="bookControls">
-         <div className="bookButtons">
-            {buttons.map((btn) => (
-               <button
-                  name={btn.name}
-                  key={btn.name}
-                  type="button"
-                  onClick={(e) => handleClick(e)}
-               >
-                  {apiBook[btn.name as keyof Book] ? (
-                     <>
-                        <Icon
-                           color={btn.color}
-                           path={btn.iconChecked}
-                           size={2}
-                        />
-                        <span>{btn.name}</span>
-                     </>
-                  ) : (
-                     <>
-                        <Icon path={btn.icon} size={2} />
-                        <span>{btn.name}</span>
-                     </>
-                  )}
-               </button>
-            ))}
-         </div>
-         <hr />
-         <div className="bookRating">
-            <div className="bookRatingButton">
-               {rating > 0 && (
-                  <button type="button" onClick={clearRating}>
-                     <Icon path={mdiClose} size={0.5} />
-                  </button>
-               )}
-               {[...Array(5)].map((star, i) => {
-                  const ratingValue = i + 1;
-
-                  return (
-                     <label
-                        key={`${star}${ratingValue}`}
-                        htmlFor={`ratingBtn${ratingValue}`}
-                     >
-                        <input
-                           type="radio"
-                           name="ratingBtn"
-                           id={`ratingBtn${ratingValue}`}
-                           value={ratingValue}
-                           onClick={(e) => handleRating(e)}
-                        />
-                        {ratingValue <= rating ? (
+         {!isLoading && (
+            <div className="bookButtons">
+               {buttons.map((btn) => (
+                  <button
+                     name={btn.name}
+                     key={btn.name}
+                     type="button"
+                     onClick={(e) => handleClick(e)}
+                  >
+                     {apiBook[btn.name as keyof Book] ? (
+                        <>
                            <Icon
-                              color="var(--sunglow)"
-                              path={mdiStar}
-                              size={1.8}
+                              color={btn.color}
+                              path={btn.iconChecked}
+                              size={2}
                            />
-                        ) : (
-                           <Icon path={mdiStar} size={1.8} />
-                        )}
-                     </label>
-                  );
-               })}
+                           <span>{btn.name}</span>
+                        </>
+                     ) : (
+                        <>
+                           <Icon path={btn.icon} size={2} />
+                           <span>{btn.name}</span>
+                        </>
+                     )}
+                  </button>
+               ))}
             </div>
-            <span>Rate</span>
-         </div>
+         )}
+         <hr />
+         {!isLoading && (
+            <div className="bookRating">
+               <div className="bookRatingButton">
+                  {rating > 0 && (
+                     <button type="button" onClick={clearRating}>
+                        <Icon path={mdiClose} size={0.5} />
+                     </button>
+                  )}
+                  {[...Array(5)].map((star, i) => {
+                     const ratingValue = i + 1;
+
+                     return (
+                        <label
+                           key={`${star}${ratingValue}`}
+                           htmlFor={`ratingBtn${ratingValue}`}
+                        >
+                           <input
+                              type="radio"
+                              name="ratingBtn"
+                              id={`ratingBtn${ratingValue}`}
+                              value={ratingValue}
+                              onClick={(e) => handleRating(e)}
+                           />
+                           {ratingValue <= rating ? (
+                              <Icon
+                                 color="var(--sunglow)"
+                                 path={mdiStar}
+                                 size={1.8}
+                              />
+                           ) : (
+                              <Icon path={mdiStar} size={1.8} />
+                           )}
+                        </label>
+                     );
+                  })}
+               </div>
+               <span>Rate</span>
+            </div>
+         )}
       </div>
    );
 }

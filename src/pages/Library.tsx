@@ -17,7 +17,7 @@ function Library() {
 
    useEffect(() => {
       if (!userId) {
-         return navigate('/login');
+         navigate('/login');
       }
 
       const getUser = async () => {
@@ -31,9 +31,11 @@ function Library() {
       };
 
       getUser();
+   }, [userId, navigate]);
 
-      return setFilteredBooks(books.filter((book) => book[btnFilter] === true));
-   }, [books, userId, btnFilter, navigate]);
+   useEffect(() => {
+      setFilteredBooks(books.filter((book) => book[btnFilter] === true));
+   }, [setFilteredBooks, btnFilter, books]);
 
    const filters = [
       {
