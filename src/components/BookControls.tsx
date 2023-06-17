@@ -15,7 +15,12 @@ import axios from '../api/axios';
 import '../styles/BookControls.css';
 
 function BookControls() {
+
+   // tem mt fução aqui dentro desse componente, separa elas em um hook
+
+   // todos state estão com tipo inferido, tipa eles assim: const [book, setBook] = useState<Book>({ id: '', volumeInfo: { title: '' } });
    const [book, setBook] = useState({ id: '', volumeInfo: { title: '' } });
+   // nesse caso do book aqui como ele começa vazio, tu poderia tipar ele como <Book | null> e começar ele com null se o tipo nao tivesse sendo inferido
    const [isLoading, setIsLoading] = useState(true);
    const [rating, setRating] = useState(0);
    const [apiBook, setApiBook] = useState({
@@ -36,6 +41,7 @@ function BookControls() {
    const navigate = useNavigate();
 
    useEffect(() => {
+      // essa funçao nao precisa ficar aqui dentro, se  ela ficar aqui ela é recriada toda vez q muda id ou bookId, e ela nao depende deles
       const fetchBook = async () => {
          const response = await fetch(
             `https://www.googleapis.com/books/v1/volumes/${bookId}`
@@ -48,6 +54,7 @@ function BookControls() {
       };
       fetchBook();
 
+      // ao inves de reescrever essa função sempre, cria ela fora e paassa o id por parametro para ela
       const getBook = async () => {
          if (id !== undefined) {
             try {
@@ -234,10 +241,12 @@ function BookControls() {
                <span>Rate</span>
             </div>
          )}
+         {/* junta os dois já que são !loading */}
       </div>
    );
 }
 
+//  interface é  depois do import
 interface Book {
    id: string;
    title: string;

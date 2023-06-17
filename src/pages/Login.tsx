@@ -14,6 +14,7 @@ function Login() {
       password: '',
    });
 
+   // pega a url pelo react router dom
    const url = window.location.pathname;
 
    useEffect(() => {

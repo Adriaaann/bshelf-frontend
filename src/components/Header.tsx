@@ -13,12 +13,14 @@ function Header() {
 
    const handleClick = () => {
       if (searchValue !== '') {
+         // joga essa regex em uma const e da um nome pra ela, fica mais facil de entender o que ela faz
          const query = searchValue.trim().replace(/\s+/g, '+');
 
          navigate(`/search/${query}`);
       }
    };
 
+   // se essa função estiver em um hook ela nao precisa ser criada dnv aqui, era so chamar o hook
    const handleChange = ({
       target: { value },
    }: {
