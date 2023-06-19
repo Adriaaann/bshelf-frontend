@@ -1,6 +1,7 @@
 import axios from 'axios';
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
 export default axios.create({
-   baseURL: 'http://localhost:3333',
-   // coloca a baseURL na env e chama aqui
+   baseURL: BACKEND_URL,
 });
