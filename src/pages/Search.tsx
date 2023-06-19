@@ -3,12 +3,26 @@ import { useEffect, useState } from 'react';
 import Header from '../components/Header';
 import '../styles/Search.css';
 
+interface Book {
+   id: string;
+   selfLink: string;
+   volumeInfo: {
+      title: string;
+      authors: string[];
+      categories: string[];
+      pageCount: number;
+   };
+   searchInfo: {
+      textSnippet: string;
+   };
+}
+
 function Search() {
    const { query } = useParams();
    const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
 
-   const [books, setBooks] = useState([]);
-   const [isLoading, setIsLoading] = useState(true);
+   const [books, setBooks] = useState<Book[]>([]);
+   const [isLoading, setIsLoading] = useState<boolean>(true);
 
    useEffect(() => {
       const fetchBooks = async () => {
@@ -90,20 +104,6 @@ function Search() {
          )}
       </>
    );
-}
-
-interface Book {
-   id: string;
-   selfLink: string;
-   volumeInfo: {
-      title: string;
-      authors: string[];
-      categories: string[];
-      pageCount: number;
-   };
-   searchInfo: {
-      textSnippet: string;
-   };
 }
 
 export default Search;

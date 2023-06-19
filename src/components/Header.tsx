@@ -7,9 +7,9 @@ import '../styles/Header.css';
 function Header() {
    const navigate = useNavigate();
 
-   const [searchValue, setSearchValue] = useState('');
-
    const user = JSON.parse(localStorage.getItem('user') || '{}');
+
+   const [searchValue, setSearchValue] = useState<string>('');
 
    const handleClick = () => {
       if (searchValue !== '') {

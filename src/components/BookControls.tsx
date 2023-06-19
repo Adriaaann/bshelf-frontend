@@ -14,16 +14,35 @@ import Icon from '@mdi/react';
 import axios from '../api/axios';
 import '../styles/BookControls.css';
 
+interface BookFetch {
+   id: string;
+   volumeInfo: { title: string };
+}
+
+interface Book {
+   id: string;
+   title: string;
+   cover: string;
+   rating: number;
+   read: boolean;
+   favorite: boolean;
+   planning: boolean;
+}
+
 function BookControls() {
-
    // tem mt fução aqui dentro desse componente, separa elas em um hook
+   const navigate = useNavigate();
 
-   // todos state estão com tipo inferido, tipa eles assim: const [book, setBook] = useState<Book>({ id: '', volumeInfo: { title: '' } });
-   const [book, setBook] = useState({ id: '', volumeInfo: { title: '' } });
-   // nesse caso do book aqui como ele começa vazio, tu poderia tipar ele como <Book | null> e começar ele com null se o tipo nao tivesse sendo inferido
-   const [isLoading, setIsLoading] = useState(true);
-   const [rating, setRating] = useState(0);
-   const [apiBook, setApiBook] = useState({
+   const user = JSON.parse(localStorage.getItem('user') || '{}');
+
+   const { _id: id } = user;
+   const { id: bookId } = useParams();
+
+   const [book, setBook] = useState<BookFetch>({
+      id: '',
+      volumeInfo: { title: '' },
+   });
+   const [apiBook, setApiBook] = useState<Book>({
       id: '',
       title: '',
       cover: '',
@@ -32,13 +51,8 @@ function BookControls() {
       favorite: false,
       planning: false,
    });
-
-   const user = JSON.parse(localStorage.getItem('user') || '{}');
-
-   const { _id: id } = user;
-   const { id: bookId } = useParams();
-
-   const navigate = useNavigate();
+   const [isLoading, setIsLoading] = useState<boolean>(true);
+   const [rating, setRating] = useState<number>(0);
 
    useEffect(() => {
       // essa funçao nao precisa ficar aqui dentro, se  ela ficar aqui ela é recriada toda vez q muda id ou bookId, e ela nao depende deles
@@ -244,17 +258,6 @@ function BookControls() {
          {/* junta os dois já que são !loading */}
       </div>
    );
-}
-
-//  interface é  depois do import
-interface Book {
-   id: string;
-   title: string;
-   cover: string;
-   rating: number;
-   read: boolean;
-   favorite: boolean;
-   planning: boolean;
 }
 
 export default BookControls;

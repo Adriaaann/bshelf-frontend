@@ -4,20 +4,26 @@ import Header from '../components/Header';
 import axios from '../api/axios';
 import '../styles/Account.css';
 
-function Account() {
-   const [errorMsg, setErrorMsg] = useState('');
-   const [successMsg, setSuccessMsg] = useState('');
-   const [user, setUser] = useState({
-      username: '',
-      email: '',
-      password: '',
-   });
+interface User {
+   username: string;
+   email: string;
+   password: string;
+}
 
+function Account() {
    const navigate = useNavigate();
 
    const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
 
    const { _id: userId } = currentUser;
+
+   const [user, setUser] = useState<User>({
+      username: '',
+      email: '',
+      password: '',
+   });
+   const [errorMsg, setErrorMsg] = useState<string>('');
+   const [successMsg, setSuccessMsg] = useState<string>('');
 
    useEffect(() => {
       if (!userId) {

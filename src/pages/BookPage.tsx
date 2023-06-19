@@ -14,11 +14,25 @@ import NotFound from './NotFound';
 import BookControls from '../components/BookControls';
 import '../styles/BookPage.css';
 
+interface Book {
+   volumeInfo: {
+      authors: string[];
+      categories: string[];
+      description: string;
+      pageCount: string;
+      publishedDate: string;
+      publisher: string;
+      title: string;
+   };
+}
+
 function BookPage() {
-   const [isLoading, setIsLoading] = useState(true);
-   const [isCollapsed, setIsCollapsed] = useState(true);
-   const [shouldCollapse, setShouldCollapse] = useState(false);
-   const [book, setBook] = useState({
+   const user = JSON.parse(localStorage.getItem('user') || '{}');
+
+   const { _id: id } = user;
+   const { id: bookId } = useParams();
+
+   const [book, setBook] = useState<Book>({
       volumeInfo: {
          authors: [],
          categories: [],
@@ -29,11 +43,9 @@ function BookPage() {
          title: '',
       },
    });
-
-   const user = JSON.parse(localStorage.getItem('user') || '{}');
-
-   const { _id: id } = user;
-   const { id: bookId } = useParams();
+   const [isLoading, setIsLoading] = useState<boolean>(true);
+   const [isCollapsed, setIsCollapsed] = useState<boolean>(true);
+   const [shouldCollapse, setShouldCollapse] = useState<boolean>(false);
 
    useEffect(() => {
       const fetchBook = async () => {

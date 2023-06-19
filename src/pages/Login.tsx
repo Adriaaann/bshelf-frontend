@@ -3,19 +3,25 @@ import { useNavigate } from 'react-router-dom';
 import '../styles/Login.css';
 import axios from '../api/axios';
 
+interface User {
+   username: string;
+   email: string;
+   password: string;
+}
+
 function Login() {
    const navigate = useNavigate();
-   const [isLogin, setLogin] = useState(true);
-   const [error, setError] = useState(false);
-   const [errorMsg, setErrorMsg] = useState('');
-   const [user, setUser] = useState({
+   // pega a url pelo react router dom
+   const url = window.location.pathname;
+
+   const [user, setUser] = useState<User>({
       username: '',
       email: '',
       password: '',
    });
-
-   // pega a url pelo react router dom
-   const url = window.location.pathname;
+   const [isLogin, setLogin] = useState<boolean>(true);
+   const [error, setError] = useState<boolean>(false);
+   const [errorMsg, setErrorMsg] = useState<string>('');
 
    useEffect(() => {
       localStorage.removeItem('user');
