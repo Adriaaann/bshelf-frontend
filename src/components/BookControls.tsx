@@ -11,8 +11,13 @@ import {
    mdiClose,
 } from '@mdi/js';
 import Icon from '@mdi/react';
-import axios from '../api/axios';
 import '../styles/BookControls.css';
+import {
+   fetchBook,
+   getBook,
+   postBook,
+   verifyBook,
+} from '../hooks/BookControlsHooks';
 
 interface BookFetch {
    id: string;
@@ -29,13 +34,20 @@ interface Book {
    planning: boolean;
 }
 
+interface User {
+   _id: string;
+   books: Book[];
+   email: string;
+   username: string;
+   password: string;
+}
+
 function BookControls() {
-   // tem mt fução aqui dentro desse componente, separa elas em um hook
    const navigate = useNavigate();
 
-   const user = JSON.parse(localStorage.getItem('user') || '{}');
+   const user: User = JSON.parse(localStorage.getItem('user') || '{}');
 
-   const { _id: id } = user;
+   const { _id: userId } = user;
    const { id: bookId } = useParams();
 
    const [book, setBook] = useState<BookFetch>({
@@ -54,75 +66,36 @@ function BookControls() {
    const [isLoading, setIsLoading] = useState<boolean>(true);
    const [rating, setRating] = useState<number>(0);
 
-   useEffect(() => {
-      // essa funçao nao precisa ficar aqui dentro, se  ela ficar aqui ela é recriada toda vez q muda id ou bookId, e ela nao depende deles
-      const fetchBook = async () => {
-         const response = await fetch(
-            `https://www.googleapis.com/books/v1/volumes/${bookId}`
-         );
-
-         const data = await response.json();
-
-         setBook(data);
-         setIsLoading(false);
-      };
-      fetchBook();
-
-      // ao inves de reescrever essa função sempre, cria ela fora e paassa o id por parametro para ela
-      const getBook = async () => {
-         if (id !== undefined) {
-            try {
-               const response = await axios.get(`books/${id}/${bookId}`);
-
-               if (!Object.keys(response.data).includes('error')) {
-                  setApiBook(response.data);
-                  setRating(response.data.rating);
-               }
-            } catch (err) {
-               console.log(err);
-            }
-         }
-      };
-      getBook();
-   }, [id, bookId]);
-
-   useEffect(() => {
-      const verifyBook = async () => {
-         if (
-            apiBook.title !== '' &&
-            !apiBook.favorite &&
-            !apiBook.planning &&
-            !apiBook.read
-         ) {
-            try {
-               await axios.delete(`books/${id}/${bookId}`);
-            } catch (err) {
-               console.log(err);
-            }
-         }
-      };
-      verifyBook();
-   }, [bookId, id, apiBook]);
-
-   const postBook = async (addBook: Book) => {
-      try {
-         await axios.post(`books/${id}`, addBook);
-      } catch (err) {
-         console.log(err);
-      }
-      setApiBook(addBook);
+   const bookTemplate = {
+      ...apiBook,
+      id: book.id,
+      title: book.volumeInfo.title,
+      cover: `https://books.google.com/books/content/images/frontcover/${book.id}?fife=w480-h690`,
    };
 
-   const clearRating = () => {
+   useEffect(() => {
+      fetchBook(bookId as string).then((data) => {
+         setBook(data.book);
+         setIsLoading(data.loading);
+      });
+
+      getBook(userId, bookId as string).then((data) => {
+         setApiBook(data);
+         setRating(data.rating);
+      });
+   }, [userId, bookId]);
+
+   useEffect(() => {
+      verifyBook(userId, bookId as string, apiBook).then((data) =>
+         setRating(data)
+      );
+   }, [bookId, userId, apiBook]);
+
+   const clearRating = async () => {
       setRating(0);
 
-      return postBook({
-         ...apiBook,
-         id: book.id,
-         title: book.volumeInfo.title,
-         cover: `https://books.google.com/books/content/images/frontcover/${book.id}?fife=w480-h690`,
-         rating: 0,
-      });
+      const data = await postBook(userId, { ...bookTemplate, rating: 0 });
+      return setApiBook(data);
    };
 
    const handleRating = ({
@@ -130,20 +103,15 @@ function BookControls() {
    }: {
       currentTarget: { value: string };
    }) => {
-      if (!id) {
+      if (!userId) {
          return navigate('/login');
       }
 
       setRating(Number(value));
 
-      return postBook({
-         ...apiBook,
-         id: book.id,
-         title: book.volumeInfo.title,
-         cover: `https://books.google.com/books/content/images/frontcover/${book.id}?fife=w480-h690`,
-         rating: Number(value),
-         read: true,
-      });
+      return postBook(userId, { ...bookTemplate, rating: Number(value) }).then(
+         (data) => setApiBook(data)
+      );
    };
 
    const handleClick = async ({
@@ -151,17 +119,14 @@ function BookControls() {
    }: {
       currentTarget: { name: string };
    }) => {
-      if (!id) {
+      if (!userId) {
          return navigate('/login');
       }
 
-      return postBook({
-         ...apiBook,
-         id: book.id,
-         title: book.volumeInfo.title,
-         cover: `https://books.google.com/books/content/images/frontcover/${book.id}?fife=w480-h690`,
-         [name]: !apiBook[name as keyof Book],
-      });
+      return postBook(userId, {
+         ...bookTemplate,
+         [name]: !bookTemplate[name as keyof Book],
+      }).then((data) => setApiBook(data));
    };
 
    const buttons = [
@@ -186,8 +151,8 @@ function BookControls() {
    ];
 
    return (
-      <div className="bookControls">
-         {!isLoading && (
+      !isLoading && (
+         <div className="bookControls">
             <div className="bookButtons">
                {buttons.map((btn) => (
                   <button
@@ -214,9 +179,7 @@ function BookControls() {
                   </button>
                ))}
             </div>
-         )}
-         <hr />
-         {!isLoading && (
+            <hr />
             <div className="bookRating">
                <div className="bookRatingButton">
                   {rating > 0 && (
@@ -254,9 +217,8 @@ function BookControls() {
                </div>
                <span>Rate</span>
             </div>
-         )}
-         {/* junta os dois já que são !loading */}
-      </div>
+         </div>
+      )
    );
 }
 
