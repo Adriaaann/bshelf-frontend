@@ -24,29 +24,30 @@ function Search() {
    const [books, setBooks] = useState<Book[]>([]);
    const [isLoading, setIsLoading] = useState<boolean>(true);
 
+   const fetchBooks = async (search: string, key: string) => {
+      const response = await fetch(
+         `https://www.googleapis.com/books/v1/volumes?search=${search}&printType=books&maxResults=40&key=${key}`
+      );
+
+      const { items } = await response.json();
+
+      const filteredBooks = items.filter((item: Book) => {
+         const {
+            volumeInfo: { authors, categories, pageCount },
+            searchInfo,
+         } = item;
+
+         return (authors && categories && searchInfo) !== undefined &&
+            pageCount > 10
+            ? item
+            : undefined;
+      });
+      setBooks(filteredBooks);
+      setIsLoading(false);
+   };
+
    useEffect(() => {
-      const fetchBooks = async () => {
-         const response = await fetch(
-            `https://www.googleapis.com/books/v1/volumes?q=${query}&printType=books&maxResults=40&key=${API_KEY}`
-         );
-
-         const { items } = await response.json();
-
-         const filteredBooks = items.filter((item: Book) => {
-            const {
-               volumeInfo: { authors, categories, pageCount },
-               searchInfo,
-            } = item;
-
-            return (authors && categories && searchInfo) !== undefined &&
-               pageCount > 10
-               ? item
-               : undefined;
-         });
-         setBooks(filteredBooks);
-         setIsLoading(false);
-      };
-      fetchBooks();
+      fetchBooks(query as string, API_KEY);
    }, [query, API_KEY]);
 
    return (

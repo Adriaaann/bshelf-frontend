@@ -24,22 +24,22 @@ function Library() {
    const [filteredBooks, setFilteredBooks] = useState<Book[]>([]);
    const [btnFilter, setBtnFilter] = useState<string>('read');
 
+   const getUser = async (id: string) => {
+      try {
+         const { data } = await axios.get(`/users/${id}`);
+
+         setBooks(data.books);
+      } catch (err) {
+         console.log(err);
+      }
+   };
+
    useEffect(() => {
       if (!userId) {
          navigate('/login');
       }
 
-      const getUser = async () => {
-         try {
-            const { data } = await axios.get(`/users/${userId}`);
-
-            setBooks(data.books);
-         } catch (err) {
-            console.log(err);
-         }
-      };
-
-      getUser();
+      getUser(userId);
    }, [userId, navigate]);
 
    useEffect(() => {
