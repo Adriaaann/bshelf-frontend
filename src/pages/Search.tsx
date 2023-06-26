@@ -68,8 +68,10 @@ function Search() {
                         searchInfo: { textSnippet },
                      } = book;
 
+                     const REMOVE_ALL_TAGS_BUT_BR = /(?!<br>)(<([^>]+)>)/gi;
+
                      const description = textSnippet.replace(
-                        /(?!<br>)(<([^>]+)>)/gi,
+                        REMOVE_ALL_TAGS_BUT_BR,
                         ''
                      );
 

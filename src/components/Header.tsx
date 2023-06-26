@@ -13,8 +13,8 @@ function Header() {
 
    const handleClick = () => {
       if (searchValue !== '') {
-         // joga essa regex em uma const e da um nome pra ela, fica mais facil de entender o que ela faz
-         const query = searchValue.trim().replace(/\s+/g, '+');
+         const SELECT_SPACE = /\s+/g;
+         const query = searchValue.trim().replace(SELECT_SPACE, '+');
 
          navigate(`/search/${query}`);
       }

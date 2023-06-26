@@ -99,7 +99,9 @@ function BookPage() {
       return newArr.length > 1 ? newArr.join(', ') : newArr;
    };
 
-   const bookDescription = description.replace(/(?!<br>)(<([^>]+)>)/gi, '');
+   const REMOVE_ALL_TAGS_BUT_BR = /(?!<br>)(<([^>]+)>)/gi;
+
+   const bookDescription = description.replace(REMOVE_ALL_TAGS_BUT_BR, '');
 
    return (
       <div>
