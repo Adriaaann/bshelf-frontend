@@ -20,7 +20,6 @@ function Header() {
       }
    };
 
-   // se essa função estiver em um hook ela nao precisa ser criada dnv aqui, era so chamar o hook
    const handleChange = ({
       target: { value },
    }: {

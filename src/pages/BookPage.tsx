@@ -27,9 +27,6 @@ interface Book {
 }
 
 function BookPage() {
-   const user = JSON.parse(localStorage.getItem('user') || '{}');
-
-   const { _id: id } = user;
    const { id: bookId } = useParams();
 
    const [book, setBook] = useState<Book>({
@@ -47,30 +44,27 @@ function BookPage() {
    const [isCollapsed, setIsCollapsed] = useState<boolean>(true);
    const [shouldCollapse, setShouldCollapse] = useState<boolean>(false);
 
+   const fetchBook = async (id: string) => {
+      const response = await fetch(
+         `https://www.googleapis.com/books/v1/volumes/${id}`
+      );
+
+      setBook(await response.json());
+
+      const bookDescription = document.querySelector(
+         '.bookDescription'
+      ) as HTMLElement;
+
+      if (bookDescription && bookDescription.clientHeight >= 425) {
+         setShouldCollapse(true);
+      }
+
+      setIsLoading(false);
+   };
+
    useEffect(() => {
-      const fetchBook = async () => {
-         const response = await fetch(
-            `https://www.googleapis.com/books/v1/volumes/${bookId}`
-         );
-
-         const data = await response.json();
-
-         setBook(data);
-
-         const bookDescription = document.querySelector(
-            '.bookDescription'
-         ) as HTMLElement;
-
-         if (bookDescription) {
-            if (bookDescription.clientHeight >= 425) {
-               setShouldCollapse(true);
-            }
-         }
-
-         setIsLoading(false);
-      };
-      fetchBook();
-   }, [id, bookId]);
+      fetchBook(bookId as string);
+   }, [bookId]);
 
    if (Object.keys(book).includes('error')) {
       return <NotFound />;
