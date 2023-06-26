@@ -1,5 +1,5 @@
 import { BaseSyntheticEvent, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import '../styles/Login.css';
 import axios from '../api/axios';
 
@@ -11,8 +11,8 @@ interface User {
 
 function Login() {
    const navigate = useNavigate();
-   // pega a url pelo react router dom
-   const url = window.location.pathname;
+
+   const url = useLocation().pathname;
 
    const [user, setUser] = useState<User>({
       username: '',
