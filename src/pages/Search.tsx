@@ -24,9 +24,9 @@ function Search() {
    const [books, setBooks] = useState<Book[]>([]);
    const [isLoading, setIsLoading] = useState<boolean>(true);
 
-   const fetchBooks = async (search: string, key: string) => {
+   const fetchBooks = async (q: string, key: string) => {
       const response = await fetch(
-         `https://www.googleapis.com/books/v1/volumes?search=${search}&printType=books&maxResults=40&key=${key}`
+         `https://www.googleapis.com/books/v1/volumes?q=${q}&printType=books&maxResults=40&key=${key}`
       );
 
       const { items } = await response.json();
