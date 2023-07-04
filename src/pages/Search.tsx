@@ -3,36 +3,51 @@ import { useEffect, useState } from 'react';
 import Header from '../components/Header';
 import '../styles/Search.css';
 
+interface Book {
+   id: string;
+   selfLink: string;
+   volumeInfo: {
+      title: string;
+      authors: string[];
+      categories: string[];
+      pageCount: number;
+   };
+   searchInfo: {
+      textSnippet: string;
+   };
+}
+
 function Search() {
    const { query } = useParams();
    const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
 
-   const [books, setBooks] = useState([]);
-   const [isLoading, setIsLoading] = useState(true);
+   const [books, setBooks] = useState<Book[]>([]);
+   const [isLoading, setIsLoading] = useState<boolean>(true);
+
+   const fetchBooks = async (search: string, key: string) => {
+      const response = await fetch(
+         `https://www.googleapis.com/books/v1/volumes?q=${search}&printType=books&maxResults=40&key=${key}`
+      );
+
+      const { items } = await response.json();
+
+      const filteredBooks = items.filter((item: Book) => {
+         const {
+            volumeInfo: { authors, categories, pageCount },
+            searchInfo,
+         } = item;
+
+         return (authors && categories && searchInfo) !== undefined &&
+            pageCount > 10
+            ? item
+            : undefined;
+      });
+      setBooks(filteredBooks);
+      setIsLoading(false);
+   };
 
    useEffect(() => {
-      const fetchBooks = async () => {
-         const response = await fetch(
-            `https://www.googleapis.com/books/v1/volumes?q=${query}&printType=books&maxResults=40&key=${API_KEY}`
-         );
-
-         const { items } = await response.json();
-
-         const filteredBooks = items.filter((item: Book) => {
-            const {
-               volumeInfo: { authors, categories, pageCount },
-               searchInfo,
-            } = item;
-
-            return (authors && categories && searchInfo) !== undefined &&
-               pageCount > 10
-               ? item
-               : undefined;
-         });
-         setBooks(filteredBooks);
-         setIsLoading(false);
-      };
-      fetchBooks();
+      fetchBooks(query as string, API_KEY);
    }, [query, API_KEY]);
 
    return (
@@ -54,8 +69,10 @@ function Search() {
                         searchInfo: { textSnippet },
                      } = book;
 
+                     const REMOVE_ALL_TAGS_BUT_BR = /(?!<br>)(<([^>]+)>)/gi;
+
                      const description = textSnippet.replace(
-                        /(?!<br>)(<([^>]+)>)/gi,
+                        REMOVE_ALL_TAGS_BUT_BR,
                         ''
                      );
 
@@ -90,20 +107,6 @@ function Search() {
          )}
       </>
    );
-}
-
-interface Book {
-   id: string;
-   selfLink: string;
-   volumeInfo: {
-      title: string;
-      authors: string[];
-      categories: string[];
-      pageCount: number;
-   };
-   searchInfo: {
-      textSnippet: string;
-   };
 }
 
 export default Search;

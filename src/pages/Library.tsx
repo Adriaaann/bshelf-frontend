@@ -4,37 +4,48 @@ import Header from '../components/Header';
 import axios from '../api/axios';
 import '../styles/Library.css';
 
-function Library() {
-   const [books, setBooks] = useState([]);
-   const [filteredBooks, setFilteredBooks] = useState([]);
-   const [btnFilter, setBtnFilter] = useState('read');
+interface Book {
+   id: string;
+   title: string;
+   cover: string;
+   read: boolean;
+   favorite: boolean;
+   planning: boolean;
+}
 
+function Library() {
    const navigate = useNavigate();
 
    const user = JSON.parse(localStorage.getItem('user') || '{}');
 
    const { _id: userId } = user;
 
+   const [books, setBooks] = useState<Book[]>([]);
+   const [filteredBooks, setFilteredBooks] = useState<Book[]>([]);
+   const [btnFilter, setBtnFilter] = useState<string>('read');
+
+   const getUser = async (id: string) => {
+      try {
+         const { data } = await axios.get(`/users/${id}`);
+
+         setBooks(data.books);
+      } catch (err) {
+         console.log(err);
+      }
+   };
+
    useEffect(() => {
       if (!userId) {
          navigate('/login');
       }
 
-      const getUser = async () => {
-         try {
-            const { data } = await axios.get(`/users/${userId}`);
-
-            setBooks(data.books);
-         } catch (err) {
-            console.log(err);
-         }
-      };
-
-      getUser();
+      getUser(userId);
    }, [userId, navigate]);
 
    useEffect(() => {
-      setFilteredBooks(books.filter((book) => book[btnFilter] === true));
+      setFilteredBooks(
+         books.filter((book: Book) => book[btnFilter as keyof Book] === true)
+      );
    }, [setFilteredBooks, btnFilter, books]);
 
    const filters = [
@@ -85,12 +96,6 @@ function Library() {
          </div>
       </div>
    );
-}
-
-interface Book {
-   id: string;
-   title: string;
-   cover: string;
 }
 
 export default Library;

@@ -7,13 +7,14 @@ import '../styles/Header.css';
 function Header() {
    const navigate = useNavigate();
 
-   const [searchValue, setSearchValue] = useState('');
-
    const user = JSON.parse(localStorage.getItem('user') || '{}');
+
+   const [searchValue, setSearchValue] = useState<string>('');
 
    const handleClick = () => {
       if (searchValue !== '') {
-         const query = searchValue.trim().replace(/\s+/g, '+');
+         const SELECT_SPACE = /\s+/g;
+         const query = searchValue.trim().replace(SELECT_SPACE, '+');
 
          navigate(`/search/${query}`);
       }
